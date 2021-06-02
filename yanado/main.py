@@ -72,7 +72,7 @@ def play_lecture(url: str) -> None:
     if url == "https://www.yanadoo.co.kr/classroom/package_study_room/12148165":
         # 강의창으로 이동
         driver.get(url)
-        driver.switch_to_frame('RoomDetailFrame')
+        driver.switch_to.frame('RoomDetailFrame')
         rows = driver.find_element_by_css_selector('div.table_area > table > tbody').find_elements_by_tag_name('tr')
         for row in rows:
             if row.find_element_by_tag_name('td').get_attribute('colspan') != '4':
@@ -81,12 +81,12 @@ def play_lecture(url: str) -> None:
                     lecture_start_num = row.find_element_by_css_selector('td.num').text[:-1]
                     break
         time.sleep(3)
-        driver.switch_to_window(driver.window_handles[-1])
+        driver.switch_to.window(driver.window_handles[-1])
 
         # 각 강의 재생
         for num in range(int(lecture_start_num), 29):
             for arg in ['', '2_']:
-                driver.execute_script(f"$('#movieForm{arg}{num}').submit()")
+                driver.execute_script(f"javascript:$('#movieForm{arg}{num}').submit()")
 
                 time.sleep(5)
 
@@ -111,7 +111,7 @@ def play_lecture(url: str) -> None:
                     if remaining_time != '-0:00:00':
                         time.sleep(10)
                     else:
-                        break
+                        driver.switch_to.parent_frame()
 
 
 if __name__ == '__main__':
