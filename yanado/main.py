@@ -2,6 +2,7 @@ import time
 import pandas as pd
 from typing import List
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from rich.console import Console
 from rich.traceback import install
 from rich.progress import track
@@ -105,13 +106,20 @@ def play_lecture(url: str) -> None:
 
                 # 잔여시간 감시 -> break
                 while True:
-                    remaining_time = driver.find_element_by_css_selector('div.vjs-remaining-time-display') \
+                    try:
+                        remaining_time = driver.find_element_by_css_selector('div.vjs-remaining-time-display') \
                             .get_attribute('innerHTML')[-8:]
-                    console.log(f'Remaining time is {remaining_time}')
-                    if remaining_time != '-0:00:00':
-                        time.sleep(10)
-                    else:
+                        console.log(f'Remaining time is {remaining_time}')
+                        if remaining_time != '-0:00:00':
+                            time.sleep(10)
+                        else:
+                            driver.switch_to.parent_frame()
+                            break
+                    except NoSuchElementException:
                         driver.switch_to.parent_frame()
+                        break
+    
+
 
 
 if __name__ == '__main__':
