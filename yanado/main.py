@@ -42,7 +42,7 @@ def login(id: str, pwd: str, stay_signed_in: bool) -> None:
             pass
 
 
-def get_urls_of_not_completed_lectures() -> pd.DataFrame:
+def get_lectures_of_not_completed_lectures() -> pd.DataFrame:
     # [이전 구매 상품] 버튼 클릭
     driver.find_element_by_css_selector('#main > div.container > ul.tab-menu > li:nth-child(2)').click()
     # tag = driver.find_element_by_css_selector('#main > div.container > ul.tab-menu > li:nth-child(2)')
@@ -73,7 +73,7 @@ def get_urls_of_not_completed_lectures() -> pd.DataFrame:
 
 if __name__ == '__main__':
     login('xxxxxxxx', 'xxxxxxxx', False)
-    lectures = get_urls_of_not_completed_lectures()
+    lectures = get_lectures_of_not_completed_lectures()
     print_dataframe(lectures, title='Lectures not completed')
 
     # 종료
