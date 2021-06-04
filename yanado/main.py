@@ -176,6 +176,58 @@ def play_lecture(url: str) -> None:
                         driver.switch_to.parent_frame()
                         break
 
+    elif url == 'https://www.yanadoo.co.kr/classroom/package_study_room/12148166':
+        # 강의창으로 이동
+        driver.get(url)
+        driver.switch_to.frame('RoomDetailFrame')
+        rows = driver.find_element_by_css_selector('div.table_area > table > tbody').find_elements_by_tag_name('tr')
+        time.sleep(3)
+        for row in rows:
+            if row.find_element_by_tag_name('td').get_attribute('colspan') != '4':
+                if row.find_element_by_class_name('percent').text != "100%":
+                    lecture_start_num = row.find_element_by_css_selector('td.num').text[:-1]
+                    if lecture_start_num == '':
+                        intro_num = row.find_element_by_css_selector('td.title').text[2]
+                        lecture_start_num = {'1': '1', '2': '7', '3': '16', '4': '19', '5': '25', '6': '31'}.get(intro_num)
+                    row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
+                    break
+        driver.switch_to.window(driver.window_handles[-1])
+
+        # 각 강의 재생
+        for num in range(int(lecture_start_num), 142):
+
+            driver.execute_script(f"javascript:$('#movieForm{num}').submit()")
+            
+            time.sleep(5)
+
+            # if 진도율 100% -> continue
+            if driver.find_element_by_css_selector('#bottom > div.stdProcess > div.stdPrpersen > div.stdPsmy02').get_attribute('innerHTML') == '100%':
+                continue
+
+            # 재생버튼 클릭
+            driver.find_element_by_css_selector('#container > .movieArea').click()
+            frame = driver.find_element_by_css_selector('#container > .movieArea > iframe')
+            driver.switch_to.frame(frame)
+            try:
+                driver.find_element_by_css_selector('#popup > div.footer > div.button-submit.button').click()
+            except:
+                pass
+
+            # 잔여시간 감시 -> break
+            while True:
+                try:
+                    remaining_time = driver.find_element_by_css_selector('div.vjs-remaining-time-display') \
+                        .get_attribute('innerHTML')[-8:]
+                    console.log(f'Remaining time is {remaining_time}')
+                    if remaining_time != '-0:00:00':
+                        time.sleep(10)
+                    else:
+                        driver.switch_to.parent_frame()
+                        break
+                except NoSuchElementException:
+                    driver.switch_to.parent_frame()
+                    break
+
 
 
 if __name__ == '__main__':
@@ -184,6 +236,7 @@ if __name__ == '__main__':
     # print_dataframe(classes, title='Classes not completed')
     # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148165')
     play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148163')
+    # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148166')
 
 
 
