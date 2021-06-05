@@ -69,19 +69,24 @@ def get_classes_not_completed() -> pd.DataFrame:
 
     return classes_df
 
-def play_lecture(url: str) -> None:
+def play_lecture(url: str, start_maually: bool=False) -> None:
     if url == "https://www.yanadoo.co.kr/classroom/package_study_room/12148165":
         # 강의창으로 이동
         driver.get(url)
         driver.switch_to.frame('RoomDetailFrame')
         rows = driver.find_element_by_css_selector('div.table_area > table > tbody').find_elements_by_tag_name('tr')
         time.sleep(3)
-        for row in rows:
-            if row.find_element_by_tag_name('td').get_attribute('colspan') != '4':
-                if row.find_element_by_class_name('percent').text != "100%":
-                    row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
-                    lecture_start_num = row.find_element_by_css_selector('td.num').text[:-1]
-                    break
+        if start_maually:
+            row = rows[1]
+            row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
+            lecture_start_num = input('Lecture Start: ')
+        else:
+            for row in rows:
+                if row.find_element_by_tag_name('td').get_attribute('colspan') != '4':
+                    if row.find_element_by_class_name('percent').text != "100%":
+                        row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
+                        lecture_start_num = row.find_element_by_css_selector('td.num').text[:-1]
+                        break
         time.sleep(3)
         driver.switch_to.window(driver.window_handles[-1])
 
@@ -126,15 +131,18 @@ def play_lecture(url: str) -> None:
         driver.switch_to.frame('RoomDetailFrame')
         rows = driver.find_element_by_css_selector('div.table_area > table > tbody').find_elements_by_tag_name('tr')
         time.sleep(3)
-        for row in rows:
-            if row.find_element_by_tag_name('td').get_attribute('colspan') != '4':
-                if row.find_element_by_class_name('percent').text != "100%":
-                    lecture_start_num = row.find_element_by_css_selector('td.num').text[:-1]
-                    if lecture_start_num == '':
-                        intro_num = row.find_element_by_css_selector('td.title').text[2]
-                        lecture_start_num = {'1': '1', '2': '7', '3': '16', '4': '19', '5': '25', '6': '31'}.get(intro_num)
-                    row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
-                    break
+        if start_maually:
+            row = rows[1]
+            row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
+            lecture_start_num = input('Lecture Start: ')
+        else:
+            for row in rows:
+                if row.find_element_by_tag_name('td').get_attribute('colspan') != '4':
+                    if row.find_element_by_class_name('percent').text != "100%":
+                        row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
+                        lecture_start_num = row.find_element_by_css_selector('td.num').text[:-1]
+                        break
+        time.sleep(3)
         driver.switch_to.window(driver.window_handles[-1])
 
         # 각 강의 재생
@@ -182,15 +190,18 @@ def play_lecture(url: str) -> None:
         driver.switch_to.frame('RoomDetailFrame')
         rows = driver.find_element_by_css_selector('div.table_area > table > tbody').find_elements_by_tag_name('tr')
         time.sleep(3)
-        for row in rows:
-            if row.find_element_by_tag_name('td').get_attribute('colspan') != '4':
-                if row.find_element_by_class_name('percent').text != "100%":
-                    lecture_start_num = row.find_element_by_css_selector('td.num').text[:-1]
-                    if lecture_start_num == '':
-                        intro_num = row.find_element_by_css_selector('td.title').text[2]
-                        lecture_start_num = {'1': '1', '2': '7', '3': '16', '4': '19', '5': '25', '6': '31'}.get(intro_num)
-                    row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
-                    break
+        if start_maually:
+            row = rows[1]
+            row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
+            lecture_start_num = input('Lecture Start: ')
+        else:
+            for row in rows:
+                if row.find_element_by_tag_name('td').get_attribute('colspan') != '4':
+                    if row.find_element_by_class_name('percent').text != "100%":
+                        row.find_element_by_css_selector('td.btns > a:nth-child(1)').click()
+                        lecture_start_num = row.find_element_by_css_selector('td.num').text[:-1]
+                        break
+        time.sleep(3)
         driver.switch_to.window(driver.window_handles[-1])
 
         # 각 강의 재생
@@ -234,9 +245,9 @@ if __name__ == '__main__':
     login(None, None, direct_input=True)
     # classes = get_classes_not_completed()
     # print_dataframe(classes, title='Classes not completed')
-    # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148165')
-    play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148163')
-    # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148166')
+    # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148165', True)
+    # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148163', True)
+    play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148166', True)
 
 
 
