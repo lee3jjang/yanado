@@ -291,6 +291,63 @@ def play_lecture(url: str, start_maually: bool=False) -> None:
             driver.switch_to.window(driver.window_handles[0])
             time.sleep(3)
 
+    elif url in (
+        'https://www.yanadoo.co.kr/max/study_detail/1901/1/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/2/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/3/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/4/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/5/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/6/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/7/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/8/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/9/12148167',
+        'https://www.yanadoo.co.kr/max/study_detail/1901/10/12148167',
+    ):
+        driver.get(url)
+        rows = driver.find_elements_by_css_selector('.stHplList > li')
+
+        # find start point
+        for row in rows:
+            progress = row.find_element_by_css_selector('dl > dd > span').text
+            num = int(row.find_element_by_css_selector('dl > dt > a').get_attribute('href')[20:-3])
+            if progress == "진도율 100％":
+                continue
+            time.sleep(5)
+            driver.execute_script(f"javascript:playMax('{num}')")
+            time.sleep(5)
+            driver.switch_to.window(driver.window_handles[-1])
+
+            for i in [1, 2, 3]:
+                driver.execute_script(f"javascript:playMax({i})")
+                time.sleep(5)
+
+                # 재생버튼 클릭
+                driver.find_element_by_css_selector('div#wrap > div.leftCon > div.maxplayZone').click()
+                frame = driver.find_element_by_css_selector('div#wrap > div.leftCon > div.maxplayZone > iframe')
+                driver.switch_to.frame(frame)
+                try:
+                    driver.find_element_by_css_selector('#popup > div.footer > div.button-submit.button').click()
+                except:
+                    pass
+
+                # 잔여시간 감시 -> break
+                while True:
+                    try:
+                        remaining_time = driver.find_element_by_css_selector('div.vjs-remaining-time-display') \
+                            .get_attribute('innerHTML')[-8:]
+                        console.log(f'Remaining time is {remaining_time}')
+                        if remaining_time != '-0:00:00':
+                            time.sleep(10)
+                        else:
+                            driver.switch_to.parent_frame()
+                            break
+                    except NoSuchElementException:
+                        driver.switch_to.parent_frame()
+                        break
+
+            driver.switch_to.window(driver.window_handles[0])
+            time.sleep(3)
+
 
 
 
@@ -302,15 +359,27 @@ if __name__ == '__main__':
     # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148165', True)
     # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148163', True)
     # play_lecture('https://www.yanadoo.co.kr/classroom/package_study_room/12148166', True)
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/45/12148168')
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/46/12148168')
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/47/12148168')
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/48/12148168')
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/49/12148168')
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/50/12148168')
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/51/12148168')
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/52/12148168')
-    play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/53/12148168')
+    
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/45/12148168')
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/46/12148168')
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/47/12148168')
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/48/12148168')
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/49/12148168')
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/50/12148168')
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/51/12148168')
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/52/12148168')
+    # play_lecture('https://www.yanadoo.co.kr/course/oneshot/detail/2863/53/12148168')
+
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/1/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/2/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/3/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/4/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/5/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/6/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/7/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/8/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/9/12148167')
+    play_lecture('https://www.yanadoo.co.kr/max/study_detail/1901/10/12148167')
 
 
     # 종료
