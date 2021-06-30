@@ -312,14 +312,13 @@ def play_lecture(url: str, start_maually: bool=False) -> None:
             num = int(row.find_element_by_css_selector('dl > dt > a').get_attribute('href')[20:-3])
             if progress == "진도율 100％":
                 continue
-            time.sleep(5)
             driver.execute_script(f"javascript:playMax('{num}')")
-            time.sleep(5)
+            time.sleep(7)
             driver.switch_to.window(driver.window_handles[-1])
 
             for i in [1, 2, 3]:
                 driver.execute_script(f"javascript:playMax({i})")
-                time.sleep(5)
+                time.sleep(7)
 
                 # 재생버튼 클릭
                 driver.find_element_by_css_selector('div#wrap > div.leftCon > div.maxplayZone').click()
@@ -346,7 +345,7 @@ def play_lecture(url: str, start_maually: bool=False) -> None:
                         break
 
             driver.switch_to.window(driver.window_handles[0])
-            time.sleep(3)
+            time.sleep(7)
 
 
 
