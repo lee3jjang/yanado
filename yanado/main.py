@@ -21,7 +21,11 @@ def print_dataframe(df: pd.DataFrame, title: str = None) -> None:
     console.print(table)
 
 # 크롬 드라이버
-driver = webdriver.Chrome(executable_path='chromedriver')
+options = webdriver.ChromeOptions()
+options.add_argument("--start-maximized")
+options.add_argument("headless")
+options.add_argument("disable-gpu")
+driver = webdriver.Chrome(executable_path='chromedriver', options=options)
 
 def login(id: str, pwd: str, direct_input: bool) -> None:
     url = 'https://www.yanadoo.co.kr/myclass/classroom/today'
